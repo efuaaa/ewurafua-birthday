@@ -12,7 +12,7 @@ const COLORS = {
 };
 
 // ── Airtable config ──────────────────────────────────────────────
-const AIRTABLE_TOKEN = "patJkHWMEnFsd2DQZ.cc7ebde64a58ee58ec34254a46c2163e9198e1b378476bb0801f8940d6e46aa6";
+const AIRTABLE_TOKEN = process.env.REACT_APP_AIRTABLE_TOKEN;
 const BASE_ID = "appvLB6VVZ9eXXs2Q";
 const TABLE_ID = "tbl8cHy86VYtzgvfZ";
 const AT_URL = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}`;
