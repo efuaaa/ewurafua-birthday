@@ -279,21 +279,7 @@ function RSVPPage({ onBack }) {
 
         <div style={{ height: 4, background: `linear-gradient(to right, ${COLORS.burgundy}, ${COLORS.orange}, ${COLORS.burgundy})`, borderRadius: "0 0 2px 2px" }} />
 
-        {!loading && rsvps.length > 0 && (
-          <div style={{ marginTop: 28 }}>
-            <p style={{ fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color: COLORS.muted, marginBottom: 12, textAlign: "center" }}>Responses so far</p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {rsvps.map((r, i) => (
-                <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 16px", background: "#fff", border: `1px solid ${COLORS.darkCream}`, borderRadius: 2 }}>
-                  <span style={{ fontSize: 14, color: COLORS.text }}>{r.name}</span>
-                  <span style={{ fontSize: 11, letterSpacing: "0.15em", textTransform: "uppercase", color: r.attending ? COLORS.burgundy : COLORS.muted, padding: "3px 8px", background: r.attending ? `rgba(107,26,42,0.08)` : COLORS.darkCream, borderRadius: 1 }}>
-                    {r.attending ? "Attending" : "Declined"}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+
       </div>
     </div>
   );
