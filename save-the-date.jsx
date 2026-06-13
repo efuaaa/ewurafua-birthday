@@ -337,81 +337,81 @@ function RSVPPage({ onBack }) {
               </p>
             </div>
           ) : (
-              <div>
-                <div style={{ marginBottom: 18 }}>
-                  <label style={{ display: "block", fontFamily: "Georgia", fontSize: 12, letterSpacing: "0.15em", textTransform: "uppercase", color: COLORS.muted, marginBottom: 8 }}>
-                    Your Name
+            <div>
+              <div style={{ marginBottom: 18 }}>
+                <label style={{ display: "block", fontFamily: "Georgia", fontSize: 12, letterSpacing: "0.15em", textTransform: "uppercase", color: COLORS.muted, marginBottom: 8 }}>
+                  Your Name
                 </label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                    placeholder="Full name"
-                    style={inputStyle}
-                    onFocus={e => e.target.style.borderColor = COLORS.orange}
-                    onBlur={e => e.target.style.borderColor = COLORS.darkCream}
-                  />
-                </div>
-
-                <div style={{ marginBottom: 24 }}>
-                  <label style={{ display: "block", fontFamily: "Georgia", fontSize: 12, letterSpacing: "0.15em", textTransform: "uppercase", color: COLORS.muted, marginBottom: 10 }}>
-                    Will you attend?
-                </label>
-                  <div style={{ display: "flex", gap: 10 }}>
-                    {[true, false].map(val => (
-                      <button
-                        key={String(val)}
-                        onClick={() => setAttending(val)}
-                        style={{
-                          flex: 1,
-                          padding: "12px 0",
-                          border: `1px solid ${attending === val ? COLORS.burgundy : COLORS.darkCream}`,
-                          borderRadius: 2,
-                          background: attending === val
-                            ? `linear-gradient(135deg, ${COLORS.burgundy}, ${COLORS.orange})`
-                            : "#fff",
-                          color: attending === val ? "#fff" : COLORS.muted,
-                          fontFamily: "Georgia",
-                          fontSize: 12,
-                          letterSpacing: "0.15em",
-                          textTransform: "uppercase",
-                          cursor: "pointer",
-                          transition: "all 0.15s",
-                        }}
-                      >
-                        {val ? "Joyfully Accept" : "Regretfully Decline"}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {error && (
-                  <p style={{ color: COLORS.orange, fontSize: 13, fontFamily: "Georgia", fontStyle: "italic", margin: "0 0 14px" }}>
-                    {error}
-                  </p>
-                )}
-
-                <button
-                  onClick={handleSubmit}
-                  style={{
-                    width: "100%",
-                    padding: "14px",
-                    background: `linear-gradient(135deg, ${COLORS.burgundy}, ${COLORS.orange})`,
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: 1,
-                    fontFamily: "Georgia",
-                    fontSize: 13,
-                    letterSpacing: "0.2em",
-                    textTransform: "uppercase",
-                    cursor: "pointer",
-                    boxShadow: `0 4px 20px rgba(107,26,42,0.2)`,
-                  }}
-                >
-                  Send Response
-              </button>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                  placeholder="Full name"
+                  style={inputStyle}
+                  onFocus={e => e.target.style.borderColor = COLORS.orange}
+                  onBlur={e => e.target.style.borderColor = COLORS.darkCream}
+                />
               </div>
-            )}
+
+              <div style={{ marginBottom: 24 }}>
+                <label style={{ display: "block", fontFamily: "Georgia", fontSize: 12, letterSpacing: "0.15em", textTransform: "uppercase", color: COLORS.muted, marginBottom: 10 }}>
+                  Will you attend?
+                </label>
+                <div style={{ display: "flex", gap: 10 }}>
+                  {[true, false].map(val => (
+                    <button
+                      key={String(val)}
+                      onClick={() => setAttending(val)}
+                      style={{
+                        flex: 1,
+                        padding: "12px 0",
+                        border: `1px solid ${attending === val ? COLORS.burgundy : COLORS.darkCream}`,
+                        borderRadius: 2,
+                        background: attending === val
+                          ? `linear-gradient(135deg, ${COLORS.burgundy}, ${COLORS.orange})`
+                          : "#fff",
+                        color: attending === val ? "#fff" : COLORS.muted,
+                        fontFamily: "Georgia",
+                        fontSize: 12,
+                        letterSpacing: "0.15em",
+                        textTransform: "uppercase",
+                        cursor: "pointer",
+                        transition: "all 0.15s",
+                      }}
+                    >
+                      {val ? "Joyfully Accept" : "Regretfully Decline"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {error && (
+                <p style={{ color: COLORS.orange, fontSize: 13, fontFamily: "Georgia", fontStyle: "italic", margin: "0 0 14px" }}>
+                  {error}
+                </p>
+              )}
+
+              <button
+                onClick={handleSubmit}
+                style={{
+                  width: "100%",
+                  padding: "14px",
+                  background: `linear-gradient(135deg, ${COLORS.burgundy}, ${COLORS.orange})`,
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: 1,
+                  fontFamily: "Georgia",
+                  fontSize: 13,
+                  letterSpacing: "0.2em",
+                  textTransform: "uppercase",
+                  cursor: "pointer",
+                  boxShadow: `0 4px 20px rgba(107,26,42,0.2)`,
+                }}
+              >
+                Send Response
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Footer strip */}
