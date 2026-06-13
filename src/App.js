@@ -12,7 +12,7 @@ const COLORS = {
 };
 
 // ── Airtable config ──────────────────────────────────────────────
-const AIRTABLE_TOKEN = process.env.REACT_APP_AIRTABLE_TOKEN;
+const AIRTABLE_TOKEN = "patJkHWMEnFsd2DQZ.cc7ebde64a58ee58ec34254a46c2163e9198e1b378476bb0801f8940d6e46aa6";
 const BASE_ID = "appvLB6VVZ9eXXs2Q";
 const TABLE_ID = "tbl8cHy86VYtzgvfZ";
 const AT_URL = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}`;
@@ -116,7 +116,7 @@ function InvitePage({ onRSVP }) {
           borderRadius: 2, padding: "28px 32px", margin: "0 0 24px", textAlign: "center", position: "relative", overflow: "hidden",
         }}>
           <div style={{ position: "absolute", inset: 0, opacity: 0.06, backgroundImage: "repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%)", backgroundSize: "8px 8px" }} />
-          <p style={{ margin: "0 0 2px", color: "rgba(255,255,255,0.65)", fontSize: 11, letterSpacing: "0.25em", textTransform: "uppercase" }}>Sunday</p>
+          <p style={{ margin: "0 0 2px", color: "rgba(255,255,255,0.65)", fontSize: 11, letterSpacing: "0.25em", textTransform: "uppercase" }}>Monday</p>
           <p style={{ margin: "0 0 6px", fontSize: "clamp(42px, 12vw, 72px)", fontWeight: 400, color: "#fff", lineHeight: 1 }}>
             6<span style={{ fontSize: "0.5em", verticalAlign: "super", color: COLORS.gold }}>th</span>
           </p>
