@@ -114,15 +114,82 @@ function InvitePage({ setPage }) {
         <Divider />
 
         <div style={{ textAlign: "center", marginTop: 24, display: "flex", gap: 12, justifyContent: "center" }}>
-          <button onClick={() => setPage("details")} style={{ background: COLORS.darkCream, color: COLORS.burgundy, border: "none", padding: "14px 24px", fontSize: 12, letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "Georgia", cursor: "pointer", borderRadius: 1 }}>
+          <button onClick={() => setPage("details")} style={{ background: `linear-gradient(135deg, ${COLORS.burgundy}, ${COLORS.orange})`, color: "#fff", border: "none", padding: "14px 40px", fontSize: 12, letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "Georgia", cursor: "pointer", borderRadius: 1, boxShadow: `0 4px 20px rgba(107,26,42,0.25)` }}>
             View Details
-          </button>
-          <button onClick={() => setPage("rsvp")} style={{ background: `linear-gradient(135deg, ${COLORS.burgundy}, ${COLORS.orange})`, color: "#fff", border: "none", padding: "14px 24px", fontSize: 12, letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "Georgia", cursor: "pointer", borderRadius: 1, boxShadow: `0 4px 20px rgba(107,26,42,0.25)` }}>
-            RSVP Now
           </button>
         </div>
       </div>
       <div style={{ width: "100%", maxWidth: 480, height: 4, background: `linear-gradient(to right, ${COLORS.burgundy}, ${COLORS.orange}, ${COLORS.burgundy})`, borderRadius: "0 0 2px 2px" }} />
+    </div>
+  );
+}
+
+// ── DIETARY UPDATE COMPONENT ─────────────────────────────────────
+function DietaryUpdate() {
+  const [name, setName] = useState("");
+  const [dietary, setDietary] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleSubmit() {
+    if (!name.trim()) { setError("Please enter your name."); return; }
+    if (!dietary.trim()) { setError("Please enter your dietary requirements."); return; }
+    setError(""); setSaving(true);
+    try {
+      // Fetch existing records to find their RSVP entry
+      const res = await fetch(`${AT_URL}?filterByFormula=Name="${encodeURIComponent(name.trim())}"`, { headers: AT_HEADERS });
+      const data = await res.json();
+      if (data.records && data.records.length > 0) {
+        // Update existing record
+        const recordId = data.records[0].id;
+        await fetch(`${AT_URL}/${recordId}`, {
+          method: "PATCH", headers: AT_HEADERS,
+          body: JSON.stringify({ fields: { Dietary: dietary.trim() } }),
+        });
+      } else {
+        setError("We couldn't find your RSVP. Please check your name matches what you submitted.");
+        setSaving(false); return;
+      }
+      setSaved(true);
+    } catch (e) {
+      setError("Couldn't save. Please try again.");
+    } finally { setSaving(false); }
+  }
+
+  const inputStyle = { width: "100%", padding: "12px 14px", border: `1px solid ${COLORS.darkCream}`, borderRadius: 2, fontFamily: "Georgia", fontSize: 14, color: COLORS.text, background: COLORS.cream, outline: "none", boxSizing: "border-box" };
+
+  return (
+    <div style={{ background: "#fff", border: `1px solid ${COLORS.darkCream}`, borderRadius: 2, padding: "28px 28px", marginBottom: 20, boxShadow: "0 4px 20px rgba(107,26,42,0.06)" }}>
+      <p style={{ fontSize: 10, letterSpacing: "0.25em", textTransform: "uppercase", color: COLORS.orange, margin: "0 0 10px" }}>🥗 Dietary Requirements</p>
+      <h3 style={{ fontSize: 20, fontWeight: 400, color: COLORS.burgundy, margin: "0 0 6px" }}>Already RSVPed?</h3>
+      <p style={{ fontSize: 13, color: COLORS.muted, fontStyle: "italic", margin: "0 0 20px" }}>Let us know of any allergies or dietary needs at least 3 days before the event.</p>
+
+      {saved ? (
+        <div style={{ textAlign: "center", padding: "16px 0" }}>
+          <p style={{ fontSize: 18, color: COLORS.burgundy, margin: "0 0 6px" }}>Thank you! ✓</p>
+          <p style={{ fontSize: 13, color: COLORS.muted, fontStyle: "italic" }}>Your dietary requirements have been noted.</p>
+        </div>
+      ) : (
+          <div>
+            <div style={{ marginBottom: 14 }}>
+              <label style={{ display: "block", fontSize: 12, letterSpacing: "0.15em", textTransform: "uppercase", color: COLORS.muted, marginBottom: 8 }}>Your Name</label>
+              <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="As submitted in your RSVP" style={inputStyle} />
+            </div>
+            <div style={{ marginBottom: 16 }}>
+              <label style={{ display: "block", fontSize: 12, letterSpacing: "0.15em", textTransform: "uppercase", color: COLORS.muted, marginBottom: 8 }}>Dietary Requirements</label>
+              <textarea value={dietary} onChange={(e) => setDietary(e.target.value)} placeholder="e.g. vegetarian, nut allergy, gluten free..." rows={3} style={{ ...inputStyle, resize: "vertical", lineHeight: 1.6 }} />
+            </div>
+            {error && <p style={{ color: COLORS.orange, fontSize: 13, fontStyle: "italic", margin: "0 0 12px" }}>{error}</p>}
+            <button onClick={handleSubmit} disabled={saving} style={{
+              width: "100%", padding: "13px", background: saving ? COLORS.muted : `linear-gradient(135deg, ${COLORS.burgundy}, ${COLORS.orange})`,
+              color: "#fff", border: "none", borderRadius: 1, fontFamily: "Georgia", fontSize: 12,
+              letterSpacing: "0.2em", textTransform: "uppercase", cursor: saving ? "not-allowed" : "pointer",
+            }}>
+              {saving ? "Saving…" : "Submit"}
+            </button>
+          </div>
+        )}
     </div>
   );
 }
@@ -251,17 +318,14 @@ function DetailsPage({ setPage }) {
           </div>
         </div>
 
-        {/* RSVP CTA */}
-        <div style={{ textAlign: "center", marginTop: 32 }}>
-          <p style={{ fontSize: 13, color: COLORS.muted, fontStyle: "italic", margin: "0 0 16px" }}>Kindly RSVP by 20th June</p>
-          <button onClick={() => setPage("rsvp")} style={{
-            background: `linear-gradient(135deg, ${COLORS.burgundy}, ${COLORS.orange})`,
-            color: "#fff", border: "none", padding: "16px 48px", fontSize: 13,
-            letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "Georgia",
-            cursor: "pointer", borderRadius: 1, boxShadow: `0 4px 20px rgba(107,26,42,0.25)`,
-          }}>
-            RSVP Now
-          </button>
+        {/* Dietary Requirements */}
+        <DietaryUpdate />
+
+        {/* RSVP closed notice */}
+        <div style={{ textAlign: "center", marginTop: 32, padding: "20px", background: COLORS.darkCream, borderRadius: 2 }}>
+          <p style={{ fontSize: 13, color: COLORS.muted, fontStyle: "italic", margin: 0 }}>
+            RSVPs are now closed — see you on the 6th! 🥂
+          </p>
         </div>
 
       </div>
@@ -309,79 +373,45 @@ function RSVPPage({ setPage }) {
         <div style={{ background: "#fff", border: `1px solid ${COLORS.darkCream}`, borderTop: "none", padding: "40px 36px", boxShadow: "0 8px 40px rgba(107,26,42,0.10)" }}>
 
           <p style={{ margin: "0 0 4px", fontSize: 11, letterSpacing: "0.25em", textTransform: "uppercase", color: COLORS.orange, textAlign: "center" }}>RSVP</p>
-          <h2 style={{ margin: "0 0 4px", fontSize: 28, fontWeight: 400, color: COLORS.burgundy, textAlign: "center" }}>Will you join us?</h2>
-          <p style={{ margin: "0 0 4px", fontSize: 13, color: COLORS.muted, textAlign: "center", fontStyle: "italic" }}>6th July · 6:30 PM · Glass Garden, London</p>
-          <p style={{ margin: "0 0 20px", fontSize: 12, color: COLORS.orange, textAlign: "center", letterSpacing: "0.1em" }}>Kindly respond by 20th June</p>
+          <h2 style={{ margin: "0 0 4px", fontSize: 28, fontWeight: 400, color: COLORS.burgundy, textAlign: "center" }}>RSVPs are now closed</h2>
 
           <Divider />
 
-          {loading ? (
-            <p style={{ textAlign: "center", color: COLORS.muted, fontStyle: "italic", fontSize: 13 }}>Loading…</p>
-          ) : (
-              <div style={{ display: "flex", gap: 12, margin: "20px 0 28px" }}>
-                <div style={{ flex: 1, textAlign: "center", padding: "14px 10px", background: `linear-gradient(135deg, ${COLORS.deepBurgundy}, ${COLORS.burgundy})`, borderRadius: 2, color: "#fff" }}>
-                  <div style={{ fontSize: 28, fontWeight: 400, lineHeight: 1 }}>{attending_count}</div>
-                  <div style={{ fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(255,255,255,0.7)", marginTop: 4 }}>Attending</div>
-                </div>
-                <div style={{ flex: 1, textAlign: "center", padding: "14px 10px", background: COLORS.darkCream, borderRadius: 2 }}>
-                  <div style={{ fontSize: 28, fontWeight: 400, lineHeight: 1, color: COLORS.text }}>{declined_count}</div>
-                  <div style={{ fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: COLORS.muted, marginTop: 4 }}>Declined</div>
-                </div>
-              </div>
-            )}
+          <div style={{ textAlign: "center", padding: "20px 0" }}>
+            <div style={{ fontSize: 40, marginBottom: 16 }}>🥂</div>
+            <p style={{ fontSize: 16, color: COLORS.burgundy, margin: "0 0 10px", fontWeight: 400 }}>Thank you to everyone who responded!</p>
+            <p style={{ fontSize: 13, color: COLORS.muted, fontStyle: "italic", lineHeight: 1.7 }}>
+              The RSVP deadline has passed.<br />We can't wait to celebrate with you on 6th July.
+            </p>
+          </div>
 
-          {submitted ? (
-            <div style={{ textAlign: "center", padding: "20px 0" }}>
-              <div style={{ fontSize: 36, marginBottom: 12 }}>{attending ? "🥂" : "💌"}</div>
-              <p style={{ fontSize: 18, color: COLORS.burgundy, margin: "0 0 8px" }}>{attending ? "We'll see you there!" : "We'll miss you!"}</p>
-              <p style={{ fontSize: 13, color: COLORS.muted, fontStyle: "italic" }}>
-                {attending ? "Your spot is noted. See you on the 6th! 🎉" : `Thanks for letting us know, ${name}.`}
-              </p>
+          <Divider />
+
+          <div style={{ textAlign: "center" }}>
+            <p style={{ fontSize: 13, color: COLORS.muted, fontStyle: "italic", margin: "0 0 14px" }}>
+              Need to update your dietary requirements?
+            </p>
+            <button onClick={() => { }} style={{
+              background: `linear-gradient(135deg, ${COLORS.burgundy}, ${COLORS.orange})`,
+              color: "#fff", border: "none", padding: "13px 32px", fontSize: 12,
+              letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "Georgia",
+              cursor: "pointer", borderRadius: 1,
+            }} onClick={() => { window.history.back(); }}>
+              Go to Details
+            </button>
+          </div>
+
+          {false && (
+            <div>
+              <button onClick={handleSubmit} disabled={saving} style={{
+                width: "100%", padding: "14px", background: saving ? COLORS.muted : `linear-gradient(135deg, ${COLORS.burgundy}, ${COLORS.orange})`,
+                color: "#fff", border: "none", borderRadius: 1, fontFamily: "Georgia", fontSize: 13, letterSpacing: "0.2em", textTransform: "uppercase",
+                cursor: saving ? "not-allowed" : "pointer", boxShadow: `0 4px 20px rgba(107,26,42,0.2)`,
+              }}>
+                {saving ? "Sending…" : "Send Response"}
+              </button>
             </div>
-          ) : (
-              <div>
-                <div style={{ marginBottom: 18 }}>
-                  <label style={{ display: "block", fontSize: 12, letterSpacing: "0.15em", textTransform: "uppercase", color: COLORS.muted, marginBottom: 8 }}>Your Name</label>
-                  <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Full name" style={inputStyle} />
-                </div>
-                <div style={{ marginBottom: 24 }}>
-                  <label style={{ display: "block", fontSize: 12, letterSpacing: "0.15em", textTransform: "uppercase", color: COLORS.muted, marginBottom: 10 }}>Will you attend?</label>
-                  <div style={{ display: "flex", gap: 10 }}>
-                    {[true, false].map((val) => (
-                      <button key={String(val)} onClick={() => setAttending(val)} style={{
-                        flex: 1, padding: "12px 0", border: `1px solid ${attending === val ? COLORS.burgundy : COLORS.darkCream}`, borderRadius: 2,
-                        background: attending === val ? `linear-gradient(135deg, ${COLORS.burgundy}, ${COLORS.orange})` : "#fff",
-                        color: attending === val ? "#fff" : COLORS.muted, fontFamily: "Georgia", fontSize: 12, letterSpacing: "0.15em", textTransform: "uppercase", cursor: "pointer",
-                      }}>
-                        {val ? "Joyfully Accept" : "Regretfully Decline"}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                {attending && (
-                  <div style={{ marginBottom: 24 }}>
-                    <label style={{ display: "block", fontSize: 12, letterSpacing: "0.15em", textTransform: "uppercase", color: COLORS.muted, marginBottom: 8 }}>
-                      Dietary Requirements
-                  </label>
-                    <textarea
-                      value={dietary}
-                      onChange={(e) => setDietary(e.target.value)}
-                      placeholder="Any allergies or dietary needs? (e.g. vegetarian, nut allergy) — leave blank if none"
-                      rows={3}
-                      style={{ ...inputStyle, resize: "vertical", lineHeight: 1.6 }}
-                    />
-                  </div>
-                )}
-                {error && <p style={{ color: COLORS.orange, fontSize: 13, fontStyle: "italic", margin: "0 0 14px" }}>{error}</p>}
-                <button onClick={handleSubmit} disabled={saving} style={{
-                  width: "100%", padding: "14px", background: saving ? COLORS.muted : `linear-gradient(135deg, ${COLORS.burgundy}, ${COLORS.orange})`,
-                  color: "#fff", border: "none", borderRadius: 1, fontFamily: "Georgia", fontSize: 13, letterSpacing: "0.2em", textTransform: "uppercase",
-                  cursor: saving ? "not-allowed" : "pointer", boxShadow: `0 4px 20px rgba(107,26,42,0.2)`,
-                }}>
-                  {saving ? "Sending…" : "Send Response"}
-                </button>
-              </div>
-            )}
+          )}
         </div>
         <div style={{ height: 4, background: `linear-gradient(to right, ${COLORS.burgundy}, ${COLORS.orange}, ${COLORS.burgundy})`, borderRadius: "0 0 2px 2px" }} />
       </div>
